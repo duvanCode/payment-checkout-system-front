@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
 import { setPaymentData, setSummary, setStep, setLoading } from '../store/reducer';
-import { calculateSummary } from '../services/api';
+import { calculateSummary, tokenizeCard } from '../services/api';
 import { detectCardType } from '../utils/validation';
 import { formatCardNumber, formatCVV, formatTwoDigits } from '../utils/formatters';
 import { validatePaymentForm } from '../utils/validation';
@@ -48,7 +48,7 @@ const PaymentModal = () => {
 
   const handleSubmit = async () => {
     const validationErrors = validatePaymentForm(formData);
-    
+
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
@@ -57,17 +57,37 @@ const PaymentModal = () => {
     dispatch(setLoading(true));
 
     try {
+      // PASO 1: Tokenizar la tarjeta con Wompi (seguridad)
+      const cardToken = await tokenizeCard({
+        number: formData.cardNumber.replace(/\s/g, ''),
+        cvc: formData.cvv,
+        exp_month: formData.expirationMonth,
+        exp_year: formData.expirationYear,
+        card_holder: formData.cardHolderName,
+      });
+
+      // PASO 2: Calcular resumen del pedido
       const summaryData = await calculateSummary({
         productId: cart.product.id,
         quantity: cart.quantity,
         deliveryCity: formData.deliveryCity
       });
 
+      // PASO 3: Guardar datos para el siguiente paso (sin información sensible de tarjeta)
       dispatch(setSummary(summaryData));
-      dispatch(setPaymentData(formData));
+      dispatch(setPaymentData({
+        ...formData,
+        cardToken, // Solo guardamos el token, no los datos de la tarjeta
+        // Limpiamos datos sensibles de tarjeta por seguridad
+        cardNumber: `**** **** **** ${formData.cardNumber.slice(-4)}`,
+        cvv: '***',
+      }));
       dispatch(setStep('summary'));
     } catch (error) {
-      console.error('Error al calcular resumen:', error);
+      console.error('Error al procesar:', error);
+      setErrors({
+        submit: error.message || 'Error al procesar la tarjeta. Verifica los datos e intenta nuevamente.'
+      });
     } finally {
       dispatch(setLoading(false));
     }
@@ -240,6 +260,19 @@ const PaymentModal = () => {
               {errors.deliveryDepartment && <span className="form-error">{errors.deliveryDepartment}</span>}
             </div>
           </div>
+
+          {errors.submit && (
+            <div className="form-error-general" style={{
+              backgroundColor: '#fee',
+              border: '1px solid #fcc',
+              padding: '12px',
+              borderRadius: '6px',
+              marginBottom: '16px',
+              color: '#c33'
+            }}>
+              {errors.submit}
+            </div>
+          )}
 
           <button className="submit-button" onClick={handleSubmit}>
             Continuar al resumen →

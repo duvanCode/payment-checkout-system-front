@@ -14,14 +14,11 @@ const SummaryPage = () => {
     dispatch(setLoading(true));
 
     try {
+      // Enviar solo el token de la tarjeta, no los datos sensibles
       const paymentRequest = {
         productId: cart.product.id,
         quantity: cart.quantity,
-        cardNumber: paymentData.cardNumber.replace(/\s/g, ''),
-        cardHolderName: paymentData.cardHolderName,
-        expirationMonth: paymentData.expirationMonth,
-        expirationYear: paymentData.expirationYear,
-        cvv: paymentData.cvv,
+        cardToken: paymentData.cardToken, // Token generado en el paso anterior
         customerEmail: paymentData.customerEmail,
         customerPhone: paymentData.customerPhone,
         customerFullName: paymentData.customerFullName,
@@ -35,6 +32,7 @@ const SummaryPage = () => {
       dispatch(setStep('result'));
     } catch (error) {
       console.error('Error al procesar el pago:', error);
+      alert('Error al procesar el pago. Por favor intenta nuevamente.');
     } finally {
       dispatch(setLoading(false));
     }
