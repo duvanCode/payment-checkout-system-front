@@ -57,7 +57,7 @@ const PaymentModal = () => {
     dispatch(setLoading(true));
 
     try {
-      // PASO 1: Tokenizar la tarjeta con Wompi (seguridad)
+      // PASO 1: Tokenizar la tarjeta con Service (seguridad)
       const cardToken = await tokenizeCard({
         number: formData.cardNumber.replace(/\s/g, ''),
         cvc: formData.cvv,

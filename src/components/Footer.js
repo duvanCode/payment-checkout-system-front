@@ -22,7 +22,7 @@ const Footer = () => {
                 <Lock size={32} color="#4ECDC4" />
               </div>
               <h3 className="feature-title">Pago Seguro</h3>
-              <p className="feature-text">Transacciones protegidas con Wompi</p>
+              <p className="feature-text">Transacciones Seguras</p>
             </div>
 
             <div className="feature-card">
