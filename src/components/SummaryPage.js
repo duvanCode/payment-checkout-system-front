@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
 import { setTransaction, setStep, setLoading } from '../store/reducer';
@@ -9,8 +9,12 @@ import './SummaryPage.css';
 const SummaryPage = () => {
   const dispatch = useDispatch();
   const { summary, cart, paymentData } = useSelector(state => state);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingMessage, setProcessingMessage] = useState('');
 
   const handleConfirmPayment = async () => {
+    setIsProcessing(true);
+    setProcessingMessage('Procesando pago...');
     dispatch(setLoading(true));
 
     try {
@@ -27,25 +31,54 @@ const SummaryPage = () => {
         deliveryDepartment: paymentData.deliveryDepartment
       };
 
+      setProcessingMessage('Comunicando con el servicio de pagos...');
       const result = await processPayment(paymentRequest);
+
+      // Guardar la transacción con el estado real del servicio
       dispatch(setTransaction(result));
-      dispatch(setStep('result'));
+
+      // Mostrar mensaje basado en el estado
+      if (result.status === 'PENDING') {
+        setProcessingMessage('Transacción pendiente. Redirigiendo...');
+      } else if (result.status === 'APPROVED') {
+        setProcessingMessage('¡Pago aprobado! Redirigiendo...');
+      } else {
+        setProcessingMessage('Procesamiento completado. Redirigiendo...');
+      }
+
+      // Pequeña pausa para mostrar el mensaje antes de redirigir
+      setTimeout(() => {
+        dispatch(setStep('result'));
+      }, 1000);
+
     } catch (error) {
       console.error('Error al procesar el pago:', error);
+      setProcessingMessage('');
       alert('Error al procesar el pago. Por favor intenta nuevamente.');
     } finally {
+      setIsProcessing(false);
       dispatch(setLoading(false));
     }
   };
 
   return (
-    <div className="summary-container">
-      <div className="summary-header">
-        <button className="summary-back-button" onClick={() => dispatch(setStep('payment'))}>
-          <ArrowLeft size={24} />
-        </button>
-        <h2 className="summary-title">Resumen del Pedido</h2>
-      </div>
+    <>
+      {isProcessing && (
+        <div className="processing-overlay">
+          <div className="processing-content">
+            <div className="processing-spinner"></div>
+            <p className="processing-message">{processingMessage}</p>
+          </div>
+        </div>
+      )}
+
+      <div className="summary-container">
+        <div className="summary-header">
+          <button className="summary-back-button" onClick={() => dispatch(setStep('payment'))}>
+            <ArrowLeft size={24} />
+          </button>
+          <h2 className="summary-title">Resumen del Pedido</h2>
+        </div>
 
       <div className="summary-wrapper">
         <div className="summary-card">
@@ -97,7 +130,8 @@ const SummaryPage = () => {
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

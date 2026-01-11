@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CheckCircle, XCircle } from 'lucide-react';
+import { CheckCircle, XCircle, Clock } from 'lucide-react';
 import { reset, setProducts, setStep } from '../store/reducer';
 import { getProducts } from '../services/api';
 import './ResultPage.css';
@@ -17,11 +17,45 @@ const ResultPage = () => {
     dispatch(setStep('products'));
   };
 
+  const isPending = transaction.status === 'PENDING';
+  const isApproved = transaction.status === 'APPROVED';
+  const isSuccess = transaction.success && !isPending;
+
   return (
     <div className="result-container">
       <div className="result-wrapper">
         <div className="result-card">
-          {transaction.success ? (
+          {isPending ? (
+            <>
+              <Clock size={80} className="result-icon result-icon-pending" style={{ color: '#ff9800' }} />
+              <h2 className="result-title">Pago en proceso</h2>
+              <p className="result-message">{transaction.message}</p>
+
+              <div className="result-details">
+                <div className="result-detail-row">
+                  <span className="result-detail-label">Número de transacción</span>
+                  <span className="result-detail-value">{transaction.transactionNumber}</span>
+                </div>
+                <div className="result-detail-row">
+                  <span className="result-detail-label">Estado</span>
+                  <span className="result-detail-value" style={{ color: '#ff9800', fontWeight: 'bold' }}>
+                    {transaction.status}
+                  </span>
+                </div>
+                <div className="result-info-box" style={{
+                  backgroundColor: '#fff3e0',
+                  border: '1px solid #ffb74d',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  marginTop: '16px'
+                }}>
+                  <p style={{ margin: 0, color: '#e65100', fontSize: '14px' }}>
+                    ⏳ Tu pago está siendo procesado. Recibirás una confirmación por correo electrónico una vez que se complete la transacción.
+                  </p>
+                </div>
+              </div>
+            </>
+          ) : isSuccess ? (
             <>
               <CheckCircle size={80} className="result-icon result-icon-success" />
               <h2 className="result-title">¡Pago exitoso!</h2>
