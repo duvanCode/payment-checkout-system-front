@@ -1,112 +1,136 @@
 # Payment Checkout System - Frontend
 
-Sistema de checkout de pagos desarrollado con React, Redux y CSS puro.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Redux](https://img.shields.io/badge/Redux-593D88?style=for-the-badge&logo=redux&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-C21325?style=for-the-badge&logo=jest&logoColor=white)
 
-## 🚀 Características
+## 📋 Descripción
+Esta es la interfaz de usuario para el sistema de checkout de pagos. Proporciona una experiencia de compra fluida y reactiva, permitiendo a los usuarios seleccionar productos, ingresar información de contacto y entrega, y completar transacciones de pago de manera segura. La aplicación interactúa directamente con el API backend para orquestar el proceso de pago.
 
-- ✅ Catálogo de productos con stock en tiempo real
-- ✅ Validación de tarjetas de crédito (VISA/MasterCard)
-- ✅ Resumen de compra con desglose de costos
-- ✅ Procesamiento de pagos con feedback visual
-- ✅ Actualización automática de stock
-- ✅ Diseño responsive (mobile-first)
-- ✅ Redux para manejo de estado global
-- ✅ App Bar con búsqueda y carrito
-- ✅ Footer informativo
+## ✨ Características Principales
+*   **Grid de Productos:** Visualización atractiva de productos con información en tiempo real.
+*   **Checkout Multi-paso:** Proceso guiado para recolección de datos y pago.
+*   **Gestión de Estado Centralizada:** Uso de Redux para un flujo de datos predecible.
+*   **Diseño Responsivo:** Adaptado para dispositivos móviles y escritorio.
+*   **Feedback en Tiempo Real:** Indicadores de carga y estados de éxito o error.
+*   **Vanilla CSS:** Estilos personalizados sin frameworks externos pesados.
 
-## 📋 Requisitos previos
+## 🏗️ Arquitectura
+La aplicación sigue un enfoque basado en componentes y una arquitectura de flujo de datos unidireccional (Redux).
 
-- Node.js v14 o superior
-- npm v6 o superior
-
-## 🔧 Instalación
-
-```bash
-# Instalar dependencias
-npm install
-
-# Iniciar servidor de desarrollo
-npm start
+```mermaid
+graph TD
+    UI[React Components] --> Actions[Redux Actions/Store]
+    Actions --> API[API Service - Axios]
+    API --> Backend[Backend API]
+    Backend --> API
+    API --> Actions
+    Actions --> UI
 ```
 
-La aplicación se abrirá en [http://localhost:3000](http://localhost:3000)
+*   **Components:** Piezas de UI reutilizables y contenedores de páginas.
+*   **Store:** Gestiona el estado global (productos, carrito, paso actual, estados de carga).
+*   **Services:** Abstracción para las llamadas al API backend.
 
-## 📦 Construcción para producción
-
-```bash
-npm run build
-```
-
-## 🗂️ Estructura del proyecto
-
-```
+## 📁 Estructura del Proyecto
+```text
 src/
-├── components/
-│   ├── AppBar.js            # Barra de navegación superior
-│   ├── Footer.js            # Footer informativo
-│   ├── ProductsPage.js      # Página de catálogo
-│   ├── PaymentModal.js      # Formulario de pago
-│   ├── SummaryPage.js       # Resumen de compra
-│   ├── ResultPage.js        # Resultado de transacción
-│   └── LoadingOverlay.js    # Overlay de carga
-├── store/
-│   ├── store.js             # Configuración de Redux
-│   └── reducer.js           # Reducer principal
-├── services/
-│   └── api.js               # Servicios API
-├── utils/
-│   ├── validation.js        # Utilidades de validación
-│   └── formatters.js        # Formateadores
-├── styles/
-│   └── animations.css       # Animaciones CSS
-├── App.js                   # Componente principal
-└── index.js                 # Punto de entrada
+├── components/          # Componentes de UI (Páginas y Modales)
+│   ├── ProductsPage.js  # Catálogo inicial
+│   ├── PaymentModal.js  # Formulario de pago
+│   ├── SummaryPage.js   # Resumen post-pago
+│   └── ResultPage.js    # Resultado final de la transacción
+├── store/               # Configuración de Redux (Store y Reducers)
+├── services/            # Lógica de comunicación con el API (Axios)
+├── styles/              # Archivos CSS puros para diseño y animaciones
+├── utils/               # Funciones auxiliares
+└── App.js               # Orquestador principal de pasos
 ```
 
-## 🎨 Diseño
+## 🛠️ Tecnologías
+*   **Librería Principal:** [React.js](https://reactjs.org/)
+*   **Manejo de Estado:** [Redux](https://redux.js.org/)
+*   **Iconografía:** [Lucide React](https://lucide.dev/)
+*   **Estilos:** CSS3 Puro (Vanilla CSS)
+*   **Cliente HTTP:** [Axios](https://axios-http.com/)
+*   **Testing:** [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) & [Jest](https://jestjs.io/)
 
-El diseño está utilizando:
-- Color primario: #1ED760 (verde)
-- Bordes redondeados estilo "pill"
-- Inputs limpios sin sombras internas
-- Transiciones suaves
-- App Bar con búsqueda y carrito
-- Footer informativo con enlaces
+## 💾 Flujo de Datos
+El estado global orquestado por Redux maneja la transición entre los diferentes estados del checkout.
 
-## 📱 Responsive
+```mermaid
+stateDiagram-v2
+    [*] --> Products
+    Products --> PaymentModal : Select Product
+    PaymentModal --> Summary : Order Placed
+    Summary --> Processing : Process Payment
+    Processing --> Result : Transaction Completed
+    Result --> Products : New Order
+```
 
-Diseñado mobile-first con soporte para:
-- iPhone SE (320px) y superiores
-- Tablets
-- Desktop
+## 🚀 Instalación y Configuración
 
-## 🧪 Pruebas
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [url-del-repo]
+    cd payment-checkout-system-front
+    ```
 
-### Pruebas Manuales
-Para probar el sistema, usa estos datos de tarjeta de prueba:
-- Número: 4111 1111 1111 1111 (VISA)
-- Número: 5555 5555 5555 4444 (MasterCard)
-- CVV: 123
-- Fecha: Cualquier fecha futura
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
 
-### Pruebas Unitarias y Cobertura
-El proyecto cuenta con una suite completa de pruebas unitarias utilizando **Jest** y **React Testing Library**, logrando una **cobertura superior al 85%** en todo el frontend.
+3.  **Configurar variables de entorno:**
+    Crea un archivo `.env` basado en `.env.example`.
+    ```bash
+    cp .env.example .env
+    ```
 
-#### Métricas de Cobertura
-- **General**: >90%
-- **Servicios/Utils**: 100%
-- **Componentes**: >85%
+4.  **Iniciar en modo desarrollo:**
+    ```bash
+    npm start
+    ```
 
-#### Ejecutar los tests
+## 🔌 API Service
+El frontend consume los siguientes servicios del backend (configurable vía proxy o env):
+*   `GET /products`: Carga inicial del catálogo.
+*   `POST /payments/transaction`: Creación de la intención de pago.
+*   `GET /payments/transaction/:id`: Polling del estado final del pago.
+
+## 🧪 Testing
+Se incluyen pruebas unitarias y de integración para los componentes críticos y el estado.
+
 ```bash
-# Ejecutar todas las pruebas
-npm test -- --watchAll=false
+# Ejecutar pruebas
+npm test
 
 # Ejecutar con reporte de cobertura
 npm test -- --coverage --watchAll=false
 ```
 
+## 📦 Deployment
+Para producción, genera el build optimizado:
+```bash
+npm run build
+```
+Los archivos resultantes en la carpeta `build/` pueden servirse mediante Nginx, S3 + CloudFront o Netlify/Vercel.
+
+## 🔒 UX/UI Highlights
+*   **Micro-animaciones:** Transiciones suaves entre estados para una mejor percepción de velocidad.
+*   **Validación Inline:** Feedback inmediato al usuario durante el llenado de formularios.
+*   **Skeleton Loading:** Mejora de la experiencia de carga inicial.
+
+## 🎯 Flujo de Usuario (Frontend)
+1.  **Exploración:** Navega por el catálogo y selecciona un producto.
+2.  **Datos:** Completa el formulario multi-paso con datos de envío y pago.
+3.  **Confirmación:** Revisa el resumen final antes de procesar el pago.
+4.  **Resultado:** Visualiza el estado final (Aprobado/Rechazado) con detalles del pedido.
+
+## 🤝 Contribución
+Las contribuciones son bienvenidas. Por favor, asegúrate de que todas las pruebas pasen antes de enviar un PR.
+
 ## 📄 Licencia
-
-MIT
-
+Este proyecto está bajo la licencia MIT.
