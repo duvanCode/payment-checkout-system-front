@@ -1,13 +1,79 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { CheckCircle, XCircle, Clock } from 'lucide-react';
-import { reset, setProducts, setStep } from '../store/reducer';
-import { getProducts } from '../services/api';
+import { CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
+import { reset, setProducts, setStep, setTransaction } from '../store/reducer';
+import { getProducts, getTransactionStatus } from '../services/api';
 import './ResultPage.css';
 
 const ResultPage = () => {
   const dispatch = useDispatch();
   const transaction = useSelector(state => state.transaction);
+  const [pollingCount, setPollingCount] = useState(0);
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [isPolling, setIsPolling] = useState(false);
+
+  const isPending = transaction.status === 'PENDING';
+  const isApproved = transaction.status === 'APPROVED';
+  const isSuccess = transaction.success && !isPending;
+
+  // Polling automático cada 10 segundos para transacciones pendientes
+  useEffect(() => {
+    if (!isPending || !transaction.transactionNumber) {
+      return;
+    }
+
+    console.log('🔄 Starting polling for transaction:', transaction.transactionNumber);
+    setIsPolling(true);
+
+    const pollTransactionStatus = async () => {
+      try {
+        console.log(`📡 Polling attempt #${pollingCount + 1} at ${new Date().toLocaleTimeString()}`);
+        const status = await getTransactionStatus(transaction.transactionNumber);
+
+        console.log('📊 Transaction status response:', status);
+        setLastUpdate(new Date());
+        setPollingCount(prev => prev + 1);
+
+        // Si el estado cambió de PENDING, actualizar la transacción
+        if (status.internalStatus !== 'PENDING') {
+          console.log('✅ Transaction status changed from PENDING to:', status.internalStatus);
+
+          // Mapear la respuesta del estado al formato esperado
+          const updatedTransaction = {
+            ...transaction,
+            status: status.internalStatus,
+            serviceStatus: status.serviceStatus,
+            updatedAt: status.updatedAt,
+            // Si está aprobada, asumimos que es exitosa
+            success: status.internalStatus === 'APPROVED',
+            message: status.internalStatus === 'APPROVED'
+              ? 'Pago aprobado exitosamente'
+              : status.internalStatus === 'DECLINED'
+              ? 'Pago rechazado'
+              : 'Estado de pago actualizado'
+          };
+
+          dispatch(setTransaction(updatedTransaction));
+          setIsPolling(false);
+        }
+      } catch (error) {
+        console.error('❌ Error polling transaction status:', error);
+      }
+    };
+
+    // Primera consulta inmediata
+    pollTransactionStatus();
+
+    // Luego cada 10 segundos
+    const intervalId = setInterval(pollTransactionStatus, 10000);
+
+    // Cleanup: detener polling cuando el componente se desmonte o el estado cambie
+    return () => {
+      console.log('🛑 Stopping polling');
+      clearInterval(intervalId);
+      setIsPolling(false);
+    };
+  }, [isPending, transaction.transactionNumber, dispatch, pollingCount, transaction]);
 
   const handleBackToStore = () => {
     dispatch(reset());
@@ -16,10 +82,6 @@ const ResultPage = () => {
     });
     dispatch(setStep('products'));
   };
-
-  const isPending = transaction.status === 'PENDING';
-  const isApproved = transaction.status === 'APPROVED';
-  const isSuccess = transaction.success && !isPending;
 
   return (
     <div className="result-container">
@@ -53,6 +115,30 @@ const ResultPage = () => {
                     ⏳ Tu pago está siendo procesado. Recibirás una confirmación por correo electrónico una vez que se complete la transacción.
                   </p>
                 </div>
+
+                {isPolling && (
+                  <div className="result-detail-row" style={{ marginTop: '16px', justifyContent: 'center', gap: '8px' }}>
+                    <RefreshCw
+                      size={16}
+                      className="rotating-icon"
+                      style={{
+                        color: '#ff9800',
+                        animation: 'spin 2s linear infinite'
+                      }}
+                    />
+                    <span style={{ fontSize: '12px', color: '#666' }}>
+                      Consultando estado... (actualización #{pollingCount})
+                    </span>
+                  </div>
+                )}
+
+                {lastUpdate && (
+                  <div className="result-detail-row" style={{ marginTop: '8px', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '11px', color: '#999' }}>
+                      Última actualización: {lastUpdate.toLocaleTimeString('es-CO')}
+                    </span>
+                  </div>
+                )}
               </div>
             </>
           ) : isSuccess ? (

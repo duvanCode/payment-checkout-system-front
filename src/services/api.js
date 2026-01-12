@@ -70,3 +70,15 @@ export const processPayment = async (data) => {
   const response = await axios.post(`${apiUrl}/payments/process`, data);
   return response.data?.data;
 };
+
+/**
+ * Consulta el estado de una transacción
+ * @param {string} transactionNumber - Número de transacción (e.g., "TRX-1768162951-80606")
+ * @returns {Promise<Object>} Estado actualizado de la transacción
+ */
+export const getTransactionStatus = async (transactionNumber) => {
+  const response = await axios.post(`${apiUrl}/payments/status`, {
+    transactionNumber
+  });
+  return response.data?.data;
+};
