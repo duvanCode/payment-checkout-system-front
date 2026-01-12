@@ -58,9 +58,10 @@ export const tokenizeCard = async (cardData) => {
     console.error('Error tokenizing card:', error);
 
     if (error.response?.data?.error) {
-      const Error = error.response.data.error;
-      throw new Error(Error.reason || Error.type || 'Error al procesar la tarjeta');
+      const errorData = error.response.data.error;
+      throw new Error(errorData.reason || errorData.type || 'Error al procesar la tarjeta');
     }
+
 
     throw new Error('No se pudo procesar la tarjeta. Verifica los datos e intenta nuevamente.');
   }

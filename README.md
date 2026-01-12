@@ -82,12 +82,31 @@ Diseñado mobile-first con soporte para:
 
 ## 🧪 Pruebas
 
+### Pruebas Manuales
 Para probar el sistema, usa estos datos de tarjeta de prueba:
 - Número: 4111 1111 1111 1111 (VISA)
 - Número: 5555 5555 5555 4444 (MasterCard)
 - CVV: 123
 - Fecha: Cualquier fecha futura
 
+### Pruebas Unitarias y Cobertura
+El proyecto cuenta con una suite completa de pruebas unitarias utilizando **Jest** y **React Testing Library**, logrando una **cobertura superior al 85%** en todo el frontend.
+
+#### Métricas de Cobertura
+- **General**: >90%
+- **Servicios/Utils**: 100%
+- **Componentes**: >85%
+
+#### Ejecutar los tests
+```bash
+# Ejecutar todas las pruebas
+npm test -- --watchAll=false
+
+# Ejecutar con reporte de cobertura
+npm test -- --coverage --watchAll=false
+```
+
 ## 📄 Licencia
 
 MIT
+

@@ -6,7 +6,8 @@ import './AppBar.css';
 
 const AppBar = () => {
   const dispatch = useDispatch();
-  const { searchQuery, selectedCategory } = useSelector(state => state);
+  const searchQuery = useSelector(state => state.searchQuery);
+  const selectedCategory = useSelector(state => state.selectedCategory);
 
   return (
     <header className="header">
