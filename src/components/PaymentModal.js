@@ -46,9 +46,34 @@ const PaymentModal = () => {
   ];
 
   const copyCardNumber = (cardNumber, status) => {
-    navigator.clipboard.writeText(cardNumber);
-    setCopiedCard(status);
-    setTimeout(() => setCopiedCard(null), 2000);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cardNumber)
+        .then(() => {
+          setCopiedCard(status);
+          setTimeout(() => setCopiedCard(null), 2000);
+        })
+        .catch(err => console.error('Error al copiar:', err));
+    } else {
+      // Fallback para navegadores antiguos o contextos no seguros
+      const textArea = document.createElement("textarea");
+      textArea.value = cardNumber;
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          setCopiedCard(status);
+          setTimeout(() => setCopiedCard(null), 2000);
+        }
+      } catch (err) {
+        console.error('Fallback: Error al copiar', err);
+      }
+
+      document.body.removeChild(textArea);
+    }
   };
 
   const handleChange = (field, value) => {

@@ -1,7 +1,7 @@
 export const formatCardNumber = (value) => {
   const cleaned = value.replace(/\D/g, '');
   const chunks = cleaned.match(/.{1,4}/g) || [];
-  return chunks.join(' ').substr(0, 23);
+  return chunks.join(' ').substr(0, 19);
 };
 
 export const formatCVV = (value) => {
