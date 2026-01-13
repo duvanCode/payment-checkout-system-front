@@ -7,6 +7,8 @@ import PaymentModal from './components/PaymentModal';
 import SummaryPage from './components/SummaryPage';
 import ResultPage from './components/ResultPage';
 import LoadingOverlay from './components/LoadingOverlay';
+import CartModal from './components/CartModal';
+
 import { setProducts } from './store/reducer';
 import { getProducts } from './services/api';
 import './styles/variables.css';
@@ -17,6 +19,8 @@ const App = () => {
   const dispatch = useDispatch();
   const { currentStep, loading } = useSelector(state => state);
   const [darkMode, setDarkMode] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+
 
   useEffect(() => {
     // Cargar productos al iniciar
@@ -59,11 +63,19 @@ const App = () => {
 
   return (
     <div className="app-container gradient-bg">
-      {showAppBar && <AppBar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
+      {showAppBar && (
+        <AppBar
+          darkMode={darkMode}
+          toggleDarkMode={toggleDarkMode}
+          onOpenCart={() => setIsCartOpen(true)}
+        />
+      )}
       {renderCurrentStep()}
       {showFooter && <Footer />}
+      <CartModal isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       {loading && <LoadingOverlay />}
     </div>
+
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ShoppingCart, Package, Heart, Plus, Minus, ArrowRight } from 'lucide-react';
-import { setCart, setStep } from '../store/reducer';
+import { addToCart, setStep } from '../store/reducer';
 import { formatCurrency } from '../utils/formatters';
 import './ProductsPage.css';
 
@@ -10,11 +10,12 @@ const ProductsPage = () => {
   const { products, searchQuery, selectedCategory } = useSelector(state => state);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [showFeedback, setShowFeedback] = useState(false);
 
   // Filtrar productos
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchQuery.toLowerCase());
+      product.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'Todos' || product.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -24,12 +25,15 @@ const ProductsPage = () => {
     setQuantity(1);
   };
 
-  const handleProceedToPayment = () => {
+  const handleAddToCart = () => {
     if (selectedProduct) {
-      dispatch(setCart({ product: selectedProduct, quantity }));
-      dispatch(setStep('payment'));
+      dispatch(addToCart(selectedProduct, quantity));
+      setSelectedProduct(null);
+      setShowFeedback(true);
+      setTimeout(() => setShowFeedback(false), 3000);
     }
   };
+
 
   return (
     <div className="products-container">
@@ -142,16 +146,23 @@ const ProductsPage = () => {
 
             <button
               className="modal-submit-button"
-              onClick={handleProceedToPayment}
+              onClick={handleAddToCart}
             >
-              Proceder al pago
+              Agregar al carrito
               <ArrowRight size={20} />
             </button>
           </div>
         </div>
       )}
+
+      {showFeedback && (
+        <div className="cart-feedback">
+          ¡Producto agregado al carrito!
+        </div>
+      )}
     </div>
   );
 };
+
 
 export default ProductsPage;

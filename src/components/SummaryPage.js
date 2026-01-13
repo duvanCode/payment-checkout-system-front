@@ -22,8 +22,10 @@ const SummaryPage = () => {
     try {
       // Enviar solo el token de la tarjeta, no los datos sensibles
       const paymentRequest = {
-        productId: cart.product.id,
-        quantity: cart.quantity,
+        items: cart.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity
+        })),
         cardToken: paymentData.cardToken, // Token generado en el paso anterior
         customerEmail: paymentData.customerEmail,
         customerPhone: paymentData.customerPhone,
@@ -35,6 +37,7 @@ const SummaryPage = () => {
 
       setProcessingMessage('Comunicando con el servicio de pagos...');
       const result = await processPayment(paymentRequest);
+
 
       // Guardar la transacción con el estado real del servicio
       dispatch(setTransaction(result));
@@ -85,30 +88,32 @@ const SummaryPage = () => {
         <div className="summary-wrapper">
           <div className="summary-card">
             <div className="summary-section">
-              <h3 className="summary-section-title">Producto</h3>
-              <div className="summary-row">
-                <span className="summary-label">{summary.productName}</span>
-                <span className="summary-value">{formatCurrency(summary.productPrice)}</span>
-              </div>
-              <div className="summary-row">
-                <span className="summary-label">Cantidad</span>
-                <span className="summary-value">{summary.quantity}</span>
-              </div>
+              <h3 className="summary-section-title">Productos</h3>
+              {cart.map((item) => (
+                <div key={item.product.id} className="summary-product-item">
+                  <div className="summary-row">
+                    <span className="summary-label">{item.product.name} (x{item.quantity})</span>
+                    <span className="summary-value">{formatCurrency(item.product.price * item.quantity)}</span>
+                  </div>
+                </div>
+              ))}
+              <div className="summary-divider"></div>
               <div className="summary-row">
                 <span className="summary-label">Subtotal</span>
                 <span className="summary-value">{formatCurrency(summary.subtotal)}</span>
               </div>
             </div>
 
+
             <div className="summary-section">
               <h3 className="summary-section-title">Cargos adicionales</h3>
               <div className="summary-row">
                 <span className="summary-label">Tarifa base</span>
-                <span className="summary-label">{formatCurrency(summary.baseFee)}</span>
+                <span className="summary-value">{formatCurrency(summary.fees?.base || 0)}</span>
               </div>
               <div className="summary-row">
                 <span className="summary-label">Envío a {summary.deliveryCity}</span>
-                <span className="summary-label">{formatCurrency(summary.deliveryFee)}</span>
+                <span className="summary-value">{formatCurrency(summary.fees?.delivery || 0)}</span>
               </div>
             </div>
 

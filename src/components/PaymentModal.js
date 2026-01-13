@@ -68,10 +68,13 @@ const PaymentModal = () => {
 
       // PASO 2: Calcular resumen del pedido
       const summaryData = await calculateSummary({
-        productId: cart.product.id,
-        quantity: cart.quantity,
+        items: cart.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity
+        })),
         deliveryCity: formData.deliveryCity
       });
+
 
       // PASO 3: Guardar datos para el siguiente paso (sin información sensible de tarjeta)
       dispatch(setSummary(summaryData));
@@ -193,78 +196,78 @@ const PaymentModal = () => {
               Información de entrega
             </h3>
 
-          <div className="form-group">
-            <label className="form-label">Nombre completo *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Tu nombre completo"
-              value={formData.customerFullName}
-              onChange={(e) => handleChange('customerFullName', e.target.value)}
-            />
-            {errors.customerFullName && <span className="form-error">{errors.customerFullName}</span>}
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Correo electrónico *</label>
-            <input
-              type="email"
-              className="form-input"
-              placeholder="correo@ejemplo.com"
-              value={formData.customerEmail}
-              onChange={(e) => handleChange('customerEmail', e.target.value)}
-            />
-            {errors.customerEmail && <span className="form-error">{errors.customerEmail}</span>}
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">WhatsApp *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="+57 3001234567"
-              value={formData.customerPhone}
-              onChange={(e) => handleChange('customerPhone', e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Dirección de entrega *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Calle 123 # 45-67 Apto 890"
-              value={formData.deliveryAddress}
-              onChange={(e) => handleChange('deliveryAddress', e.target.value)}
-            />
-            {errors.deliveryAddress && <span className="form-error">{errors.deliveryAddress}</span>}
-          </div>
-
-          <div className="form-row">
-            <div className="form-group form-group-flex">
-              <label className="form-label">Ciudad *</label>
+            <div className="form-group">
+              <label className="form-label">Nombre completo *</label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Bogotá"
-                value={formData.deliveryCity}
-                onChange={(e) => handleChange('deliveryCity', e.target.value)}
+                placeholder="Tu nombre completo"
+                value={formData.customerFullName}
+                onChange={(e) => handleChange('customerFullName', e.target.value)}
               />
-              {errors.deliveryCity && <span className="form-error">{errors.deliveryCity}</span>}
+              {errors.customerFullName && <span className="form-error">{errors.customerFullName}</span>}
             </div>
 
-            <div className="form-group form-group-flex">
-              <label className="form-label">Departamento *</label>
+            <div className="form-group">
+              <label className="form-label">Correo electrónico *</label>
+              <input
+                type="email"
+                className="form-input"
+                placeholder="correo@ejemplo.com"
+                value={formData.customerEmail}
+                onChange={(e) => handleChange('customerEmail', e.target.value)}
+              />
+              {errors.customerEmail && <span className="form-error">{errors.customerEmail}</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">WhatsApp *</label>
               <input
                 type="text"
                 className="form-input"
-                placeholder="Cundinamarca"
-                value={formData.deliveryDepartment}
-                onChange={(e) => handleChange('deliveryDepartment', e.target.value)}
+                placeholder="+57 3001234567"
+                value={formData.customerPhone}
+                onChange={(e) => handleChange('customerPhone', e.target.value)}
               />
-              {errors.deliveryDepartment && <span className="form-error">{errors.deliveryDepartment}</span>}
             </div>
-          </div>
+
+            <div className="form-group">
+              <label className="form-label">Dirección de entrega *</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Calle 123 # 45-67 Apto 890"
+                value={formData.deliveryAddress}
+                onChange={(e) => handleChange('deliveryAddress', e.target.value)}
+              />
+              {errors.deliveryAddress && <span className="form-error">{errors.deliveryAddress}</span>}
+            </div>
+
+            <div className="form-row">
+              <div className="form-group form-group-flex">
+                <label className="form-label">Ciudad *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Bogotá"
+                  value={formData.deliveryCity}
+                  onChange={(e) => handleChange('deliveryCity', e.target.value)}
+                />
+                {errors.deliveryCity && <span className="form-error">{errors.deliveryCity}</span>}
+              </div>
+
+              <div className="form-group form-group-flex">
+                <label className="form-label">Departamento *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Cundinamarca"
+                  value={formData.deliveryDepartment}
+                  onChange={(e) => handleChange('deliveryDepartment', e.target.value)}
+                />
+                {errors.deliveryDepartment && <span className="form-error">{errors.deliveryDepartment}</span>}
+              </div>
+            </div>
           </div>
 
           {errors.submit && (

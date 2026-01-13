@@ -4,9 +4,12 @@ import { Search, ShoppingCart, Moon, Sun } from 'lucide-react';
 import { setSearchQuery } from '../store/reducer';
 import './AppBar.css';
 
-const AppBar = ({ darkMode, toggleDarkMode }) => {
+const AppBar = ({ darkMode, toggleDarkMode, onOpenCart }) => {
   const dispatch = useDispatch();
   const searchQuery = useSelector(state => state.searchQuery);
+  const cart = useSelector(state => state.cart);
+
+  const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <header className="header">
@@ -45,9 +48,11 @@ const AppBar = ({ darkMode, toggleDarkMode }) => {
             <button className="btn-dark-mode" onClick={toggleDarkMode}>
               {darkMode ? <Sun size={20} /> : <Moon size={20} />}
             </button>
-            <div className="cart-button">
+            <div className="cart-button" onClick={onOpenCart} style={{ cursor: 'pointer' }}>
               <ShoppingCart size={22} />
-              <span className="cart-badge">0</span>
+              {cartItemsCount > 0 && (
+                <span className="cart-badge">{cartItemsCount}</span>
+              )}
             </div>
           </div>
         </div>
@@ -55,5 +60,7 @@ const AppBar = ({ darkMode, toggleDarkMode }) => {
     </header>
   );
 };
+
+
 
 export default AppBar;

@@ -467,3 +467,30 @@
     padding: var(--spacing-xl);
   }
 }
+
+.cart-feedback {
+  position: fixed;
+  bottom: var(--spacing-2xl);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--success-dark);
+  color: white;
+  padding: var(--spacing-md) var(--spacing-2xl);
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-2xl);
+  z-index: var(--z-toast);
+  animation: slideInUp var(--transition-base) ease-out;
+  font-weight: var(--font-weight-semibold);
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translate(-50%, 100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+

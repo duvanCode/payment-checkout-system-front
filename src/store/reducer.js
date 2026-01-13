@@ -1,7 +1,11 @@
+// Cargar carrito desde local storage
+const savedCart = localStorage.getItem('cart');
+const initialCart = savedCart ? JSON.parse(savedCart) : [];
+
 // Estado inicial
 const initialState = {
   products: [],
-  cart: null,
+  cart: initialCart,
   paymentData: null,
   summary: null,
   transaction: null,
@@ -12,9 +16,14 @@ const initialState = {
   selectedCategory: 'Todos'
 };
 
+
 // Action types
 export const SET_PRODUCTS = 'SET_PRODUCTS';
 export const SET_CART = 'SET_CART';
+export const ADD_TO_CART = 'ADD_TO_CART';
+export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
+export const UPDATE_QUANTITY = 'UPDATE_QUANTITY';
+export const CLEAR_CART = 'CLEAR_CART';
 export const SET_PAYMENT_DATA = 'SET_PAYMENT_DATA';
 export const SET_SUMMARY = 'SET_SUMMARY';
 export const SET_TRANSACTION = 'SET_TRANSACTION';
@@ -25,6 +34,7 @@ export const SET_SEARCH_QUERY = 'SET_SEARCH_QUERY';
 export const SET_CATEGORY = 'SET_CATEGORY';
 export const RESET = 'RESET';
 
+
 // Reducer
 const reducer = (state = initialState, action) => {
   switch (action.type) {
@@ -32,6 +42,39 @@ const reducer = (state = initialState, action) => {
       return { ...state, products: action.payload };
     case SET_CART:
       return { ...state, cart: action.payload };
+    case ADD_TO_CART: {
+      const { product, quantity } = action.payload;
+      const existingItem = state.cart.find(item => item.product.id === product.id);
+      
+      let newCart;
+      if (existingItem) {
+        newCart = state.cart.map(item =>
+          item.product.id === product.id
+            ? { ...item, quantity: Math.min(product.stock, item.quantity + quantity) }
+            : item
+        );
+      } else {
+        newCart = [...state.cart, { product, quantity }];
+      }
+      return { ...state, cart: newCart };
+    }
+    case REMOVE_FROM_CART:
+      return {
+        ...state,
+        cart: state.cart.filter(item => item.product.id !== action.payload)
+      };
+    case UPDATE_QUANTITY:
+      return {
+        ...state,
+        cart: state.cart.map(item =>
+          item.product.id === action.payload.productId
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        )
+      };
+    case CLEAR_CART:
+      return { ...state, cart: [] };
+
     case SET_PAYMENT_DATA:
       return { ...state, paymentData: action.payload };
     case SET_SUMMARY:
@@ -58,6 +101,10 @@ const reducer = (state = initialState, action) => {
 // Action creators
 export const setProducts = (products) => ({ type: SET_PRODUCTS, payload: products });
 export const setCart = (cart) => ({ type: SET_CART, payload: cart });
+export const addToCart = (product, quantity = 1) => ({ type: ADD_TO_CART, payload: { product, quantity } });
+export const removeFromCart = (productId) => ({ type: REMOVE_FROM_CART, payload: productId });
+export const updateQuantity = (productId, quantity) => ({ type: UPDATE_QUANTITY, payload: { productId, quantity } });
+export const clearCart = () => ({ type: CLEAR_CART });
 export const setPaymentData = (data) => ({ type: SET_PAYMENT_DATA, payload: data });
 export const setSummary = (summary) => ({ type: SET_SUMMARY, payload: summary });
 export const setTransaction = (transaction) => ({ type: SET_TRANSACTION, payload: transaction });
@@ -67,5 +114,6 @@ export const setStep = (step) => ({ type: SET_STEP, payload: step });
 export const setSearchQuery = (query) => ({ type: SET_SEARCH_QUERY, payload: query });
 export const setCategory = (category) => ({ type: SET_CATEGORY, payload: category });
 export const reset = () => ({ type: RESET });
+
 
 export default reducer;
