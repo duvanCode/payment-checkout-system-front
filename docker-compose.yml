@@ -3,19 +3,18 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        # Pasar variables de entorno como argumentos de build
+        - REACT_APP_API_URL=${REACT_APP_API_URL:-http://localhost:3000/api}
+        - REACT_APP_API_KEY=${REACT_APP_API_KEY:-tu_api_key}
+        - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL:-https://api-sandbox.co.uat.wompi.dev/v1}
+        - REACT_APP_SERVICE_PUBLIC_KEY=${REACT_APP_SERVICE_PUBLIC_KEY:-pub_stagtest_g2u0HQd3ZMh05hsSgTS2lUV8t3s4mOt7}
     container_name: products-frontend
     restart: unless-stopped
     ports:
       - "${PORT:-3001}:${PORT:-3001}"
     environment:
+      # Variable de entorno para el puerto en tiempo de ejecución
       - PORT=${PORT:-3001}
-      - REACT_APP_API_URL=${REACT_APP_API_URL}
-      - REACT_APP_SERVICE_URL=${REACT_APP_SERVICE_URL}
-      - REACT_APP_SERVICE_PUBLIC_KEY=${REACT_APP_SERVICE_PUBLIC_KEY}
-    volumes:
-      - ./src:/app/src
-      - ./public:/app/public
-      - ./.env:/app/.env
-      - /app/node_modules
     stdin_open: true
     tty: true

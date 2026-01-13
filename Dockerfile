@@ -42,10 +42,15 @@ RUN npm install -g serve
 # Copiar los archivos del build desde el stage anterior
 COPY --from=builder /app/build ./build
 
-# Exponer puerto 80
-EXPOSE 80
+# Copiar script de entrada
+COPY entrypoint.sh ./
+RUN chmod +x entrypoint.sh
 
-# Servir la aplicación con serve
-# --single: redirige todas las rutas a index.html (para React Router)
-# --listen: puerto a escuchar
-CMD ["serve", "-s", "build", "-l", "80"]
+# Variable de entorno por defecto para el puerto
+ENV PORT=80
+
+# Exponer puerto (se puede sobrescribir con -p)
+EXPOSE $PORT
+
+# Usar script de entrada para manejar puerto dinámico
+ENTRYPOINT ["./entrypoint.sh"]
