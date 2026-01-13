@@ -9,15 +9,16 @@ const mockStore = configureStore([]);
 describe('ProductsPage Component', () => {
     let store;
     const mockProducts = [
-        { id: 1, name: 'Phone', category: 'Tech', price: 1000, stock: 10, description: 'Best phone' },
-        { id: 2, name: 'T-Shirt', category: 'Clothing', price: 20, stock: 5, description: 'Cool shirt' }
+        { id: 1, name: 'Phone', category: 'Tech', price: 1000, stock: 10, description: 'Best phone', imageUrl: 'https://example.com/phone.jpg' },
+        { id: 2, name: 'T-Shirt', category: 'Clothing', price: 20, stock: 5, description: 'Cool shirt', imageUrl: 'https://example.com/shirt.jpg' }
     ];
 
     beforeEach(() => {
         store = mockStore({
             products: mockProducts,
             searchQuery: '',
-            selectedCategory: 'Todos'
+            selectedCategory: 'Todos',
+            cart: []
         });
         store.dispatch = jest.fn();
     });
@@ -36,7 +37,8 @@ describe('ProductsPage Component', () => {
         store = mockStore({
             products: mockProducts,
             searchQuery: 'phone',
-            selectedCategory: 'Todos'
+            selectedCategory: 'Todos',
+            cart: []
         });
         render(
             <Provider store={store}>
@@ -53,25 +55,25 @@ describe('ProductsPage Component', () => {
                 <ProductsPage />
             </Provider>
         );
-        const buyButtons = screen.getAllByText('Comprar');
+        // El componente usa íconos de ShoppingCart como botón de compra
+        const buyButtons = screen.getAllByTestId('shopping-cart-icon');
         fireEvent.click(buyButtons[0]);
 
         expect(screen.getByText('Seleccionar cantidad')).toBeInTheDocument();
     });
 
-    it('should dispatch setCart and setStep when proceeding to payment', () => {
+    it('should dispatch addToCart when adding to cart', () => {
         render(
             <Provider store={store}>
                 <ProductsPage />
             </Provider>
         );
-        const buyButtons = screen.getAllByText('Comprar');
+        const buyButtons = screen.getAllByTestId('shopping-cart-icon');
         fireEvent.click(buyButtons[0]);
 
-        const proceedButton = screen.getByText('Proceder al pago');
-        fireEvent.click(proceedButton);
+        const addToCartButton = screen.getByText('Agregar al carrito');
+        fireEvent.click(addToCartButton);
 
-        expect(store.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'SET_CART' }));
-        expect(store.dispatch).toHaveBeenCalledWith({ type: 'SET_STEP', payload: 'payment' });
+        expect(store.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'ADD_TO_CART' }));
     });
 });

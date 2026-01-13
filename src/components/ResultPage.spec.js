@@ -21,7 +21,7 @@ describe('ResultPage Component', () => {
 
 
     const setup = (transaction) => {
-        store = mockStore({ transaction });
+        store = mockStore({ transaction, cart: [] });
         store.dispatch = jest.fn();
         return render(
             <Provider store={store}>

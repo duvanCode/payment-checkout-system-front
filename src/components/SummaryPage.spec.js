@@ -16,15 +16,19 @@ describe('SummaryPage Component', () => {
             productPrice: 100000,
             quantity: 1,
             subtotal: 100000,
-            baseFee: 5000,
-            deliveryFee: 10000,
+            fees: {
+                base: 5000,
+                delivery: 10000
+            },
             deliveryCity: 'Bogota',
             total: 115000
         },
-        cart: {
-            product: { id: 1 },
-            quantity: 1
-        },
+        cart: [
+            {
+                product: { id: 1, name: 'Test Product', price: 100000 },
+                quantity: 1
+            }
+        ],
         paymentData: {
             cardToken: 'tok_123',
             customerFullName: 'John Doe',
@@ -47,7 +51,7 @@ describe('SummaryPage Component', () => {
                 <SummaryPage />
             </Provider>
         );
-        expect(screen.getByText('Test Product')).toBeInTheDocument();
+        expect(screen.getByText(/Test Product/)).toBeInTheDocument();
         expect(screen.getByText('Total a pagar')).toBeInTheDocument();
         expect(screen.getByText('John Doe')).toBeInTheDocument();
     });

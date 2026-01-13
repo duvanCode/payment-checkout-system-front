@@ -6,7 +6,7 @@ import reducer, {
 
 const initialState = {
     products: [],
-    cart: null,
+    cart: [],
     paymentData: null,
     summary: null,
     transaction: null,
@@ -70,7 +70,7 @@ describe('Store Reducer', () => {
     it('should handle RESET', () => {
         const state = { ...initialState, cart: {}, products: [1] };
         const nextState = reducer(state, { type: RESET });
-        expect(nextState.cart).toBeNull();
+        expect(nextState.cart).toEqual([]); // RESET reinicia cart a []
         expect(nextState.products).toEqual([1]); // RESET mantiene los productos según el código
     });
 });

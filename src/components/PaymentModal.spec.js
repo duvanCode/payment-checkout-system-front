@@ -11,10 +11,12 @@ jest.mock('../services/api');
 describe('PaymentModal Component', () => {
     let store;
     const mockInitialState = {
-        cart: {
-            product: { id: 1 },
-            quantity: 1
-        },
+        cart: [
+            {
+                product: { id: 1, name: 'Test Product', price: 100000 },
+                quantity: 1
+            }
+        ],
         loading: false
     };
 

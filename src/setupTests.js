@@ -27,6 +27,7 @@ jest.mock('lucide-react', () => {
         XCircle: mockIcon('x-circle'),
         CreditCard: mockIcon('credit-card'),
         ArrowLeft: mockIcon('arrow-left'),
+        ArrowRight: mockIcon('arrow-right'),
         ChevronRight: mockIcon('chevron-right'),
         Star: mockIcon('star'),
         Clock: mockIcon('clock'),
@@ -37,6 +38,10 @@ jest.mock('lucide-react', () => {
         Lock: mockIcon('lock'),
         RefreshCw: mockIcon('refresh-cw'),
         MessageCircle: mockIcon('message-circle'),
+        Moon: mockIcon('moon'),
+        Sun: mockIcon('sun'),
+        Copy: mockIcon('copy'),
+        Check: mockIcon('check'),
     };
 });
 

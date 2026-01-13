@@ -13,7 +13,8 @@ describe('AppBar Component', () => {
     beforeEach(() => {
         store = mockStore({
             searchQuery: '',
-            selectedCategory: 'Todos'
+            selectedCategory: 'Todos',
+            cart: []
         });
         store.dispatch = jest.fn();
     });
@@ -24,7 +25,8 @@ describe('AppBar Component', () => {
                 <AppBar />
             </Provider>
         );
-        expect(screen.getByText('TechStore')).toBeInTheDocument();
+        expect(screen.getByPlaceholderText('Buscar productos...')).toBeInTheDocument();
+        expect(screen.getByText('Store')).toBeInTheDocument();
     });
 
     it('should dispatch setSearchQuery on input change', () => {
