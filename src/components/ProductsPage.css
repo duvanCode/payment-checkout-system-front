@@ -209,33 +209,23 @@
   color: var(--text-tertiary);
 }
 
-.buy-button {
+.buy-button-indicator {
   background-color: var(--primary);
   color: var(--text-primary-light);
   border: none;
   border-radius: var(--radius-2xl);
   padding: 12px;
-  cursor: pointer;
   transition: all var(--transition-base);
   box-shadow: var(--shadow-primary);
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
-.buy-button:hover:not(:disabled) {
+.product-card:hover .buy-button-indicator {
   background-color: var(--primary-hover);
-  transform: scale(0.95);
-}
-
-.buy-button:active:not(:disabled) {
-  transform: scale(0.9);
-}
-
-.buy-button:disabled {
-  background-color: var(--text-tertiary);
-  cursor: not-allowed;
-  box-shadow: none;
+  transform: scale(1.05);
 }
 
 /* Estado vacío */

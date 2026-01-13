@@ -56,10 +56,18 @@ const ProductsPage = () => {
       {/* Grid de productos */}
       <div className="products-grid">
         {filteredProducts.map(product => (
-          <div key={product.id} className="product-card">
+          <div
+            key={product.id}
+            className="product-card"
+            onClick={() => product.stock > 0 && handleBuyClick(product)}
+            style={{ cursor: product.stock > 0 ? 'pointer' : 'not-allowed' }}
+          >
             <div className="product-image-container">
               <img src={product.imageUrl} alt={product.name} className="product-image" />
-              <button className="favorite-button">
+              <button
+                className="favorite-button"
+                onClick={(e) => e.stopPropagation()}
+              >
                 <Heart size={20} />
               </button>
               {product.stock < 10 && product.stock > 0 && (
@@ -83,13 +91,9 @@ const ProductsPage = () => {
                     <span className="product-currency"> COP</span>
                   </div>
                 </div>
-                <button
-                  className="buy-button"
-                  onClick={() => handleBuyClick(product)}
-                  disabled={product.stock === 0}
-                >
+                <div className="buy-button-indicator">
                   <ShoppingCart size={20} />
-                </button>
+                </div>
               </div>
             </div>
           </div>
