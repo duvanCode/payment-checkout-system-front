@@ -112,7 +112,16 @@ npm test -- --coverage --watchAll=false
 ```
 
 ## 📦 Deployment
-Para producción, genera el build optimizado:
+El frontend está containerizado para facilitar su despliegue en cualquier entorno.
+
+**Opción 1: Despliegue con Docker (Recomendado)**
+```bash
+npm run docker:up
+```
+Esto construirá la imagen optimizada y servirá la aplicación en el puerto configurado.
+
+**Opción 2: Build Manual**
+Para generar los archivos estáticos manualmente:
 ```bash
 npm run build
 ```
