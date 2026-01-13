@@ -421,18 +421,23 @@
   color: var(--text-primary);
 }
 
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
 .modal-submit-button {
   width: 100%;
-  background-color: var(--primary);
-  color: var(--text-primary-light);
-  border: none;
+  background-color: var(--surface-hover);
+  color: var(--text-primary);
+  border: 2px solid var(--border);
   border-radius: var(--radius-full);
   padding: 16px 32px;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   cursor: pointer;
   transition: all var(--transition-base);
-  box-shadow: var(--shadow-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -440,13 +445,25 @@
 }
 
 .modal-submit-button:hover {
-  background-color: var(--primary-hover);
-  box-shadow: var(--shadow-lg);
+  background-color: var(--border);
   transform: translateY(-2px);
 }
 
 .modal-submit-button:active {
   transform: translateY(0);
+}
+
+.modal-submit-button-primary {
+  background-color: var(--primary);
+  color: var(--text-primary-light);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.modal-submit-button-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Responsive */

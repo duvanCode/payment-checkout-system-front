@@ -34,6 +34,14 @@ const ProductsPage = () => {
     }
   };
 
+  const handlePayWithCreditCard = () => {
+    if (selectedProduct) {
+      dispatch(addToCart(selectedProduct, quantity));
+      dispatch(setStep('payment'));
+      setSelectedProduct(null);
+    }
+  };
+
 
   return (
     <div className="products-container">
@@ -144,13 +152,22 @@ const ProductsPage = () => {
               <span className="modal-total-value">{formatCurrency(selectedProduct.price * quantity)} COP</span>
             </div>
 
-            <button
-              className="modal-submit-button"
-              onClick={handleAddToCart}
-            >
-              Agregar al carrito
-              <ArrowRight size={20} />
-            </button>
+            <div className="modal-actions">
+              <button
+                className="modal-submit-button"
+                onClick={handleAddToCart}
+              >
+                Agregar al carrito
+                <ArrowRight size={20} />
+              </button>
+              <button
+                className="modal-submit-button modal-submit-button-primary"
+                onClick={handlePayWithCreditCard}
+              >
+                Pay with credit card
+                <ArrowRight size={20} />
+              </button>
+            </div>
           </div>
         </div>
       )}
