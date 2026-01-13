@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Copy, Check } from 'lucide-react';
 import { setPaymentData, setSummary, setStep, setLoading } from '../store/reducer';
 import { calculateSummary, tokenizeCard } from '../services/api';
 import { detectCardType } from '../utils/validation';
@@ -26,8 +26,30 @@ const PaymentModal = () => {
   });
   const [errors, setErrors] = useState({});
   const [showCvv, setShowCvv] = useState(false);
+  const [copiedCard, setCopiedCard] = useState(null);
 
   const cardType = detectCardType(formData.cardNumber);
+
+  const testCards = [
+    {
+      number: '4242424242424242',
+      status: 'APPROVED',
+      description: 'Transacción aprobada',
+      color: '#10b981'
+    },
+    {
+      number: '4111111111111111',
+      status: 'DECLINED',
+      description: 'Transacción declinada',
+      color: '#ef4444'
+    }
+  ];
+
+  const copyCardNumber = (cardNumber, status) => {
+    navigator.clipboard.writeText(cardNumber);
+    setCopiedCard(status);
+    setTimeout(() => setCopiedCard(null), 2000);
+  };
 
   const handleChange = (field, value) => {
     let processedValue = value;
@@ -286,6 +308,45 @@ const PaymentModal = () => {
           <button className="submit-button" onClick={handleSubmit}>
             Continuar al resumen →
           </button>
+        </div>
+
+        {/* Tarjetas de prueba */}
+        <div className="test-cards-container">
+          <h3 className="test-cards-title">Tarjetas de prueba</h3>
+          <div className="test-cards-grid">
+            {testCards.map((card) => (
+              <div key={card.status} className="test-card" style={{ borderLeftColor: card.color }}>
+                <div className="test-card-header">
+                  <span className="test-card-status" style={{ color: card.color }}>
+                    {card.description}
+                  </span>
+                </div>
+                <div className="test-card-body">
+                  <div className="test-card-number">{card.number.replace(/(.{4})/g, '$1 ').trim()}</div>
+                  <div className="test-card-details">
+                    <span>Cualquier fecha futura</span>
+                    <span>CVV: 3 dígitos</span>
+                  </div>
+                </div>
+                <button
+                  className="test-card-copy-button"
+                  onClick={() => copyCardNumber(card.number, card.status)}
+                >
+                  {copiedCard === card.status ? (
+                    <>
+                      <Check size={16} />
+                      <span>Copiado</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={16} />
+                      <span>Copiar número</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

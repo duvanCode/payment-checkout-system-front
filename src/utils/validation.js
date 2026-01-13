@@ -28,7 +28,43 @@ export const validateCardNumber = (number) => {
 };
 
 export const validateEmail = (email) => {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Regex más estricta que valida:
+  // - Parte local (antes del @): letras, números, puntos, guiones, guiones bajos
+  // - Dominio: letras, números, guiones
+  // - TLD (extensión): al menos 2 letras, sin números ni caracteres especiales
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  if (!emailRegex.test(email)) {
+    return false;
+  }
+
+  // Validaciones adicionales
+  const [localPart, domain] = email.split('@');
+
+  // La parte local no debe comenzar o terminar con punto
+  if (localPart.startsWith('.') || localPart.endsWith('.')) {
+    return false;
+  }
+
+  // No debe tener puntos consecutivos
+  if (localPart.includes('..') || domain.includes('..')) {
+    return false;
+  }
+
+  // El dominio no debe comenzar o terminar con guión o punto
+  if (domain.startsWith('-') || domain.endsWith('-') ||
+      domain.startsWith('.') || domain.endsWith('.')) {
+    return false;
+  }
+
+  // La extensión no debe terminar con punto
+  const domainParts = domain.split('.');
+  const tld = domainParts[domainParts.length - 1];
+  if (tld.length < 2 || /[^a-zA-Z]/.test(tld)) {
+    return false;
+  }
+
+  return true;
 };
 
 export const validateExpirationMonth = (month) => {

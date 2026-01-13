@@ -211,6 +211,7 @@
 
 .cvv-toggle-button:hover {
   background-color: var(--surface-hover);
+  transform: translateY(-50%);
 }
 
 /* Errores */
@@ -429,5 +430,115 @@
 
   .submit-button {
     font-size: var(--font-size-base);
+  }
+}
+
+/* ===========================
+   Tarjetas de prueba
+   =========================== */
+
+.test-cards-container {
+  margin-top: var(--spacing-2xl);
+  padding: var(--spacing-xl);
+  background-color: var(--surface);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+
+.test-cards-title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin: 0 0 var(--spacing-lg) 0;
+  text-align: center;
+}
+
+.test-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.test-card {
+  background-color: var(--background);
+  border: 1px solid var(--border);
+  border-left: 4px solid;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-lg);
+  transition: all var(--transition-base);
+}
+
+.test-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.test-card-header {
+  margin-bottom: var(--spacing-md);
+}
+
+.test-card-status {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.test-card-body {
+  margin-bottom: var(--spacing-lg);
+}
+
+.test-card-number {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  font-family: 'Courier New', monospace;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+  letter-spacing: 1px;
+}
+
+.test-card-details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.test-card-copy-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.test-card-copy-button:hover {
+  background-color: var(--surface-hover);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.test-card-copy-button:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .test-cards-container {
+    padding: var(--spacing-lg);
+  }
+
+  .test-cards-grid {
+    grid-template-columns: 1fr;
   }
 }

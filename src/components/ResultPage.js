@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { CheckCircle, XCircle, Clock, RefreshCw } from 'lucide-react';
-import { reset, setProducts, setStep, setTransaction } from '../store/reducer';
+import { reset, setProducts, setStep, setTransaction, clearCart } from '../store/reducer';
 import { getProducts, getTransactionStatus } from '../services/api';
 import './ResultPage.css';
 
@@ -54,6 +54,14 @@ const ResultPage = () => {
           };
 
           dispatch(setTransaction(updatedTransaction));
+
+          // Si la transacción fue aprobada, limpiar el carrito
+          if (status.internalStatus === 'APPROVED') {
+            console.log('🛒 Clearing cart after successful payment');
+            dispatch(clearCart());
+            localStorage.removeItem('cart');
+          }
+
           setIsPolling(false);
         }
       } catch (error) {
@@ -74,6 +82,15 @@ const ResultPage = () => {
       setIsPolling(false);
     };
   }, [isPending, transaction.transactionNumber, dispatch, pollingCount, transaction]);
+
+  // Limpiar el carrito cuando la transacción ya llega como APPROVED (sin polling)
+  useEffect(() => {
+    if (isApproved && !isPending) {
+      console.log('🛒 Clearing cart after successful payment (direct approval)');
+      dispatch(clearCart());
+      localStorage.removeItem('cart');
+    }
+  }, [isApproved, isPending, dispatch]);
 
   const handleBackToStore = () => {
     dispatch(reset());

@@ -59,9 +59,41 @@ export const tokenizeCard = async (cardData) => {
 
     if (error.response?.data?.error) {
       const errorData = error.response.data.error;
-      throw new Error(errorData.reason || errorData.type || 'Error al procesar la tarjeta');
-    }
 
+      // Si hay mensajes de validación específicos, construir un mensaje legible
+      if (errorData.messages && typeof errorData.messages === 'object') {
+        const fieldErrors = Object.entries(errorData.messages)
+          .map(([field, messages]) => {
+            const fieldName = {
+              'number': 'Número de tarjeta',
+              'cvc': 'CVV',
+              'exp_month': 'Mes de expiración',
+              'exp_year': 'Año de expiración',
+              'card_holder': 'Nombre del titular'
+            }[field] || field;
+
+            return `${fieldName}: ${Array.isArray(messages) ? messages.join(', ') : messages}`;
+          })
+          .join('. ');
+
+        throw new Error(fieldErrors);
+      }
+
+      // Si hay un reason, usarlo
+      if (errorData.reason) {
+        throw new Error(errorData.reason);
+      }
+
+      // Último recurso: mostrar el tipo de error
+      const errorTypes = {
+        'INPUT_VALIDATION_ERROR': 'Los datos de la tarjeta son inválidos. Verifica la información e intenta nuevamente.',
+        'CARD_DECLINED': 'La tarjeta fue rechazada. Intenta con otra tarjeta.',
+        'INVALID_CARD': 'El número de tarjeta es inválido.',
+        'EXPIRED_CARD': 'La tarjeta ha expirado.'
+      };
+
+      throw new Error(errorTypes[errorData.type] || 'Error al procesar la tarjeta');
+    }
 
     throw new Error('No se pudo procesar la tarjeta. Verifica los datos e intenta nuevamente.');
   }
