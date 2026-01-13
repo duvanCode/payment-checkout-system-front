@@ -403,7 +403,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--spacing-sm);
+  padding: var(--spacing-lg);
   background-color: var(--surface-hover);
   border-radius: var(--radius-2xl);
   margin-bottom: var(--spacing-xl);
@@ -488,9 +488,9 @@
     transform: translate(-50%, 100%);
     opacity: 0;
   }
+
   to {
     transform: translate(-50%, 0);
     opacity: 1;
   }
 }
-
