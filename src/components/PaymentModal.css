@@ -1,63 +1,126 @@
+/* ===========================
+   PaymentModal - Formulario de pago moderno
+   =========================== */
+
 .payment-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  background-color: var(--background);
 }
 
 .payment-header {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-bottom: 30px;
-  padding: 20px 0;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
 }
 
 .back-button {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: var(--spacing-sm);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
-  transition: background-color 0.2s;
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+  color: var(--text-secondary);
+}
+
+.back-button:hover {
+  background-color: var(--surface-hover);
+  color: var(--text-primary);
+  transform: translateX(-4px);
 }
 
 .payment-title {
-  font-size: 28px;
-  font-weight: 600;
-  color: #1a1a1a;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
   margin: 0;
 }
 
 .form-wrapper {
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .form-card {
-  background-color: white;
-  border-radius: 16px;
-  padding: 40px;
-  max-width: 600px;
-  width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: var(--surface);
+  border-radius: var(--radius-3xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-2xl);
+  border: 1px solid var(--border);
+  animation: slideInUp var(--transition-slow) ease-out;
 }
 
+/* Secciones del formulario */
 .section-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-lg);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
 }
 
 .section-title-spacing {
-  margin-top: 30px;
+  margin-top: var(--spacing-2xl);
+  padding-top: var(--spacing-2xl);
+  border-top: 1px solid var(--border);
 }
 
+/* Layout de dos columnas para desktop */
+@media (min-width: 1024px) {
+  .form-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    grid-template-areas:
+      "left right"
+      "error error"
+      "button button";
+  }
+
+  .payment-section-left {
+    grid-area: left;
+    border-right: 1px solid var(--border);
+    padding-right: var(--spacing-2xl);
+  }
+
+  .payment-section-right {
+    grid-area: right;
+    padding-left: var(--spacing-2xl);
+  }
+
+  .section-title-spacing {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .form-error-general {
+    grid-area: error;
+    margin-top: var(--spacing-2xl);
+  }
+
+  .submit-button {
+    grid-area: button;
+    margin-top: var(--spacing-xl);
+  }
+}
+
+/* Grupos de formulario */
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
 }
 
 .form-group-flex {
@@ -66,10 +129,10 @@
 
 .form-label {
   display: block;
-  font-size: 14px;
-  font-weight: 500;
-  color: #1a1a1a;
-  margin-bottom: 8px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
 }
 
 .input-wrapper {
@@ -79,32 +142,59 @@
 .form-input {
   width: 100%;
   padding: 12px 16px;
-  font-size: 15px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
   outline: none;
-  transition: border-color 0.2s;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
   box-sizing: border-box;
+  font-family: var(--font-family);
 }
 
+.form-input:hover {
+  border-color: var(--border-hover);
+}
+
+.form-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(178, 242, 187, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.form-input:disabled {
+  background-color: var(--surface-hover);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Badge de tipo de tarjeta */
 .card-type-badge {
   position: absolute;
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 11px;
-  font-weight: 600;
-  color: #1ED760;
-  background-color: #e8f5e9;
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary-light);
+  background-color: var(--primary);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
+/* Filas de formulario */
 .form-row {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-md);
 }
 
+/* Botón de toggle CVV */
 .cvv-toggle-button {
   position: absolute;
   right: 12px;
@@ -114,24 +204,230 @@
   border: none;
   cursor: pointer;
   font-size: 18px;
+  padding: var(--spacing-xs);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
 }
 
+.cvv-toggle-button:hover {
+  background-color: var(--surface-hover);
+}
+
+/* Errores */
 .form-error {
   display: block;
-  color: #FF4444;
-  font-size: 12px;
-  margin-top: 4px;
+  color: var(--error);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-xs);
+  font-weight: var(--font-weight-medium);
 }
 
+.form-error-general {
+  background-color: var(--error-light);
+  border: 1px solid var(--error);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--spacing-lg);
+  color: var(--error-dark);
+  font-size: var(--font-size-sm);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.dark-mode .form-error-general {
+  background-color: rgba(239, 68, 68, 0.1);
+  border-color: var(--error);
+  color: var(--error);
+}
+
+/* Botón de submit */
 .submit-button {
   width: 100%;
-  background-color: #1ED760;
-  color: white;
+  background-color: var(--primary);
+  color: var(--text-primary-light);
   border: none;
-  border-radius: 24px;
-  padding: 16px 28px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: var(--radius-full);
+  padding: 16px 32px;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
   cursor: pointer;
-  margin-top: 30px;
+  margin-top: var(--spacing-2xl);
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+}
+
+.submit-button:hover {
+  background-color: var(--primary-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.submit-button:active {
+  transform: translateY(0);
+}
+
+.submit-button:disabled {
+  background-color: var(--text-tertiary);
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+/* Info box para términos */
+.terms-checkbox-container {
+  display: flex;
+  align-items: start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background-color: var(--surface-hover);
+  border-radius: var(--radius-xl);
+  margin-top: var(--spacing-xl);
+}
+
+.terms-checkbox-container input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--primary);
+  margin-top: 2px;
+}
+
+.terms-checkbox-container label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.terms-checkbox-container a {
+  color: var(--text-primary);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-underline-offset: 2px;
+}
+
+.terms-checkbox-container a:hover {
+  color: var(--primary);
+}
+
+/* Footer del formulario */
+.payment-footer {
+  padding: var(--spacing-xl);
+  background-color: var(--surface-hover);
+  border-radius: 0 0 var(--radius-3xl) var(--radius-3xl);
+  margin: 0 calc(var(--spacing-2xl) * -1) calc(var(--spacing-2xl) * -1);
+  margin-top: var(--spacing-2xl);
+  text-align: center;
+}
+
+.payment-footer-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--spacing-sm);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: var(--font-weight-bold);
+}
+
+.payment-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-md);
+  opacity: 0.4;
+  filter: grayscale(1);
+  transition: all var(--transition-base);
+}
+
+.payment-icons:hover {
+  opacity: 0.8;
+  filter: grayscale(0);
+}
+
+/* Select personalizado */
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: var(--font-size-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  outline: none;
+  background-color: var(--surface);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%2364748b' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+}
+
+.form-select:hover {
+  border-color: var(--border-hover);
+}
+
+.form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(178, 242, 187, 0.1);
+}
+
+/* Prefix de teléfono */
+.phone-input-wrapper {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.phone-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-md);
+  background-color: var(--surface-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Responsive */
+@media (max-width: 1023px) {
+  .form-wrapper {
+    max-width: 700px;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .form-card {
+    padding: var(--spacing-xl);
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .payment-title {
+    font-size: var(--font-size-2xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .form-card {
+    padding: var(--spacing-lg);
+  }
+
+  .submit-button {
+    font-size: var(--font-size-base);
+  }
 }

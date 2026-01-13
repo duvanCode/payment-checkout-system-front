@@ -1,49 +1,53 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Search, Heart, ShoppingCart } from 'lucide-react';
-import { setSearchQuery, setCategory } from '../store/reducer';
+import { Search, ShoppingCart, Moon, Sun } from 'lucide-react';
+import { setSearchQuery } from '../store/reducer';
 import './AppBar.css';
 
-const AppBar = () => {
+const AppBar = ({ darkMode, toggleDarkMode }) => {
   const dispatch = useDispatch();
   const searchQuery = useSelector(state => state.searchQuery);
-  const selectedCategory = useSelector(state => state.selectedCategory);
 
   return (
     <header className="header">
-      <div className="top-bar">
-        <div className="container">
-          <div className="top-bar-content">
-            {/* Logo */}
-            <div className="logo">
-              <div className="logo-icon">T</div>
-              <span className="logo-text">TechStore</span>
+      <div className="header-container">
+        <div className="header-content">
+          {/* Logo */}
+          <div className="logo">
+            <div className="logo-icon">
+              <ShoppingCart size={24} strokeWidth={2.5} />
             </div>
+            <span className="logo-text">
+              Pay<span className="logo-light">Store</span>
+            </span>
+          </div>
 
-            {/* Barra de búsqueda */}
-            <div className="search-container">
-              <input
-                type="text"
-                placeholder="Buscar productos..."
-                value={searchQuery}
-                onChange={(e) => dispatch(setSearchQuery(e.target.value))}
-                className="search-input"
-              />
-              <button className="search-button">
-                <Search size={20} color="#1ED760" />
-              </button>
-            </div>
+          {/* Barra de búsqueda */}
+          <div className="search-container">
+            <Search size={18} className="search-icon" />
+            <input
+              type="text"
+              placeholder="Buscar productos..."
+              value={searchQuery}
+              onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+              className="search-input"
+            />
+          </div>
 
-            {/* Iconos de acción */}
-            <div className="actions">
-              <button className="icon-button">
-                <Heart size={24} />
-                <span className="badge">0</span>
-              </button>
-              <button className="icon-button">
-                <ShoppingCart size={24} />
-                <span className="badge">0</span>
-              </button>
+          {/* Iconos de acción */}
+          <div className="actions">
+            <button className="btn-login">
+              <span>Inicia sesión</span>
+            </button>
+            <button className="btn-signup">
+              <span>Crea tu cuenta</span>
+            </button>
+            <button className="btn-dark-mode" onClick={toggleDarkMode}>
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <div className="cart-button">
+              <ShoppingCart size={22} />
+              <span className="cart-badge">0</span>
             </div>
           </div>
         </div>

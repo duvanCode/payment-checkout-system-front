@@ -176,14 +176,6 @@ const ResultPage = () => {
                     </div>
                   </>
                 )}
-                {transaction.product && (
-                  <div className="result-detail-row">
-                    <span className="result-detail-label">Stock actualizado</span>
-                    <span className="result-detail-value">
-                      {transaction.product.name}: {transaction.product.updatedStock} unidades
-                    </span>
-                  </div>
-                )}
               </div>
             </>
           ) : (

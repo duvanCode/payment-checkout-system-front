@@ -104,89 +104,94 @@ const PaymentModal = () => {
 
       <div className="form-wrapper">
         <div className="form-card">
-          <h3 className="section-title">Datos de la tarjeta</h3>
+          {/* Sección izquierda: Datos de la tarjeta */}
+          <div className="payment-section-left">
+            <h3 className="section-title">Datos de la tarjeta</h3>
 
-          <div className="form-group">
-            <label className="form-label">Número de tarjeta *</label>
-            <div className="input-wrapper">
-              <input
-                type="text"
-                className="form-input"
-                placeholder="1234 5678 9012 3456"
-                value={formData.cardNumber}
-                onChange={(e) => handleChange('cardNumber', e.target.value)}
-              />
-              {cardType && (
-                <span className="card-type-badge">
-                  {cardType.toUpperCase()}
-                </span>
-              )}
-            </div>
-            {errors.cardNumber && <span className="form-error">{errors.cardNumber}</span>}
-          </div>
-
-          <div className="form-group">
-            <label className="form-label">Nombre del titular *</label>
-            <input
-              type="text"
-              className="form-input"
-              placeholder="Como aparece en la tarjeta"
-              value={formData.cardHolderName}
-              onChange={(e) => handleChange('cardHolderName', e.target.value)}
-            />
-            {errors.cardHolderName && <span className="form-error">{errors.cardHolderName}</span>}
-          </div>
-
-          <div className="form-row">
-            <div className="form-group form-group-flex">
-              <label className="form-label">Mes *</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="MM"
-                value={formData.expirationMonth}
-                onChange={(e) => handleChange('expirationMonth', e.target.value)}
-              />
-              {errors.expirationMonth && <span className="form-error">{errors.expirationMonth}</span>}
-            </div>
-
-            <div className="form-group form-group-flex">
-              <label className="form-label">Año *</label>
-              <input
-                type="text"
-                className="form-input"
-                placeholder="AA"
-                value={formData.expirationYear}
-                onChange={(e) => handleChange('expirationYear', e.target.value)}
-              />
-              {errors.expirationYear && <span className="form-error">{errors.expirationYear}</span>}
-            </div>
-
-            <div className="form-group form-group-flex">
-              <label className="form-label">CVV *</label>
+            <div className="form-group">
+              <label className="form-label">Número de tarjeta *</label>
               <div className="input-wrapper">
                 <input
-                  type={showCvv ? 'text' : 'password'}
+                  type="text"
                   className="form-input"
-                  placeholder="123"
-                  value={formData.cvv}
-                  onChange={(e) => handleChange('cvv', e.target.value)}
+                  placeholder="1234 5678 9012 3456"
+                  value={formData.cardNumber}
+                  onChange={(e) => handleChange('cardNumber', e.target.value)}
                 />
-                <button
-                  className="cvv-toggle-button"
-                  onClick={() => setShowCvv(!showCvv)}
-                  type="button"
-                >
-                  👁️
-                </button>
+                {cardType && (
+                  <span className="card-type-badge">
+                    {cardType.toUpperCase()}
+                  </span>
+                )}
               </div>
-              {errors.cvv && <span className="form-error">{errors.cvv}</span>}
+              {errors.cardNumber && <span className="form-error">{errors.cardNumber}</span>}
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Nombre del titular *</label>
+              <input
+                type="text"
+                className="form-input"
+                placeholder="Como aparece en la tarjeta"
+                value={formData.cardHolderName}
+                onChange={(e) => handleChange('cardHolderName', e.target.value)}
+              />
+              {errors.cardHolderName && <span className="form-error">{errors.cardHolderName}</span>}
+            </div>
+
+            <div className="form-row">
+              <div className="form-group form-group-flex">
+                <label className="form-label">Mes *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="MM"
+                  value={formData.expirationMonth}
+                  onChange={(e) => handleChange('expirationMonth', e.target.value)}
+                />
+                {errors.expirationMonth && <span className="form-error">{errors.expirationMonth}</span>}
+              </div>
+
+              <div className="form-group form-group-flex">
+                <label className="form-label">Año *</label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="AA"
+                  value={formData.expirationYear}
+                  onChange={(e) => handleChange('expirationYear', e.target.value)}
+                />
+                {errors.expirationYear && <span className="form-error">{errors.expirationYear}</span>}
+              </div>
+
+              <div className="form-group form-group-flex">
+                <label className="form-label">CVV *</label>
+                <div className="input-wrapper">
+                  <input
+                    type={showCvv ? 'text' : 'password'}
+                    className="form-input"
+                    placeholder="123"
+                    value={formData.cvv}
+                    onChange={(e) => handleChange('cvv', e.target.value)}
+                  />
+                  <button
+                    className="cvv-toggle-button"
+                    onClick={() => setShowCvv(!showCvv)}
+                    type="button"
+                  >
+                    👁️
+                  </button>
+                </div>
+                {errors.cvv && <span className="form-error">{errors.cvv}</span>}
+              </div>
             </div>
           </div>
 
-          <h3 className="section-title section-title-spacing">
-            Información de entrega
-          </h3>
+          {/* Sección derecha: Información de entrega */}
+          <div className="payment-section-right">
+            <h3 className="section-title section-title-spacing">
+              Información de entrega
+            </h3>
 
           <div className="form-group">
             <label className="form-label">Nombre completo *</label>
@@ -259,6 +264,7 @@ const PaymentModal = () => {
               />
               {errors.deliveryDepartment && <span className="form-error">{errors.deliveryDepartment}</span>}
             </div>
+          </div>
           </div>
 
           {errors.submit && (

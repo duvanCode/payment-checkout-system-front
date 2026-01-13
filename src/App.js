@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AppBar from './components/AppBar';
 import Footer from './components/Footer';
@@ -9,18 +9,35 @@ import ResultPage from './components/ResultPage';
 import LoadingOverlay from './components/LoadingOverlay';
 import { setProducts } from './store/reducer';
 import { getProducts } from './services/api';
+import './styles/variables.css';
 import './styles/animations.css';
+import './App.css';
 
 const App = () => {
   const dispatch = useDispatch();
   const { currentStep, loading } = useSelector(state => state);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     // Cargar productos al iniciar
     getProducts().then(data => {
       dispatch(setProducts(data.products));
     });
+
+    // Verificar preferencia de modo oscuro del sistema
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const savedMode = localStorage.getItem('darkMode');
+    const isDark = savedMode ? savedMode === 'true' : prefersDark;
+    setDarkMode(isDark);
+    document.body.classList.toggle('dark-mode', isDark);
   }, [dispatch]);
+
+  const toggleDarkMode = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    document.body.classList.toggle('dark-mode', newMode);
+    localStorage.setItem('darkMode', newMode);
+  };
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -41,21 +58,13 @@ const App = () => {
   const showFooter = currentStep === 'products';
 
   return (
-    <div style={styles.app}>
-      {showAppBar && <AppBar />}
+    <div className="app-container gradient-bg">
+      {showAppBar && <AppBar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}
       {renderCurrentStep()}
       {showFooter && <Footer />}
       {loading && <LoadingOverlay />}
     </div>
   );
-};
-
-const styles = {
-  app: {
-    minHeight: '100vh',
-    backgroundColor: '#f5f5f5',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
-  }
 };
 
 export default App;

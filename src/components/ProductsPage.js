@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ShoppingCart, Package } from 'lucide-react';
+import { ShoppingCart, Package, Heart, Plus, Minus, ArrowRight } from 'lucide-react';
 import { setCart, setStep } from '../store/reducer';
 import { formatCurrency } from '../utils/formatters';
 import './ProductsPage.css';
@@ -33,39 +33,42 @@ const ProductsPage = () => {
 
   return (
     <div className="products-container">
-      {/* Banner de ofertas */}
-      <div className="banner">
-        <div className="banner-badge">Nuevo</div>
-        <h2 className="banner-title">Ofertas Especiales</h2>
-        <p className="banner-text">Hasta 50% de descuento en productos seleccionados</p>
-        <button className="banner-button">Ver ofertas</button>
-      </div>
-
       {/* Título de sección */}
       <div className="section-header">
-        <h2 className="section-title">Nuestros Productos</h2>
-        <select className="sort-select">
-          <option>Ordenar por</option>
-          <option>Precio: Menor a Mayor</option>
-          <option>Precio: Mayor a Menor</option>
-          <option>Más Populares</option>
-        </select>
+        <div>
+          <h1 className="page-title">Selección de Productos</h1>
+          <p className="page-subtitle">Encuentra los mejores artículos con el respaldo y seguridad de nuestro sistema de pagos.</p>
+        </div>
       </div>
 
       {/* Grid de productos */}
       <div className="products-grid">
         {filteredProducts.map(product => (
           <div key={product.id} className="product-card">
-            <img src={product.imageUrl} alt={product.name} className="product-image" />
+            <div className="product-image-container">
+              <img src={product.imageUrl} alt={product.name} className="product-image" />
+              <button className="favorite-button">
+                <Heart size={20} />
+              </button>
+              {product.stock < 10 && product.stock > 0 && (
+                <span className="stock-badge stock-badge-low">Últimas {product.stock} unid.</span>
+              )}
+              {product.stock === 0 && (
+                <span className="stock-badge stock-badge-out">Agotado</span>
+              )}
+              {product.stock >= 10 && (
+                <span className="stock-badge stock-badge-available">En Stock</span>
+              )}
+            </div>
             <div className="product-info">
               <h3 className="product-name">{product.name}</h3>
               <p className="product-description">{product.description}</p>
               <div className="product-footer">
-                <div>
-                  <div className="product-price">{formatCurrency(product.price)}</div>
-                  <div className="product-stock">
-                    <Package size={14} className="stock-icon" />
-                    {product.stock} disponibles
+                <div className="product-price-container">
+                  <span className="product-price-label">Precio</span>
+                  <div className="product-price">
+                    {formatCurrency(product.price)}
+                    <span className="product-currency"> COP</span>
                   </div>
                 </div>
                 <button
@@ -73,7 +76,7 @@ const ProductsPage = () => {
                   onClick={() => handleBuyClick(product)}
                   disabled={product.stock === 0}
                 >
-                  Comprar
+                  <ShoppingCart size={20} />
                 </button>
               </div>
             </div>
@@ -83,40 +86,66 @@ const ProductsPage = () => {
 
       {filteredProducts.length === 0 && (
         <div className="empty-state">
-          <ShoppingCart size={64} color="#d1d5db" />
+          <ShoppingCart size={64} />
           <p className="empty-text">No se encontraron productos</p>
         </div>
       )}
 
       {/* Modal de cantidad */}
       {selectedProduct && (
-        <div className="modal" onClick={() => setSelectedProduct(null)}>
+        <div className="modal-overlay" onClick={() => setSelectedProduct(null)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title">Seleccionar cantidad</h3>
-            <p className="modal-product-name">{selectedProduct.name}</p>
-            <div className="quantity-selector">
-              <button
-                className="quantity-button"
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              >
-                -
-              </button>
-              <span className="quantity-display">{quantity}</span>
-              <button
-                className="quantity-button"
-                onClick={() => setQuantity(Math.min(selectedProduct.stock, quantity + 1))}
-              >
-                +
-              </button>
+            <div className="modal-header">
+              <div className="modal-icon">
+                <ShoppingCart size={24} />
+              </div>
+              <div>
+                <h3 className="modal-title">Seleccionar cantidad</h3>
+                <p className="modal-subtitle">Paso 1 de 2: Cantidad</p>
+              </div>
             </div>
-            <p className="modal-total">
-              Total: {formatCurrency(selectedProduct.price * quantity)}
-            </p>
+
+            <div className="modal-product-info">
+              <img src={selectedProduct.imageUrl} alt={selectedProduct.name} className="modal-product-image" />
+              <div>
+                <h4 className="modal-product-name">{selectedProduct.name}</h4>
+                <p className="modal-product-price">{formatCurrency(selectedProduct.price)} COP</p>
+              </div>
+            </div>
+
+            <div className="quantity-section">
+              <label className="quantity-label">Cantidad *</label>
+              <div className="quantity-selector">
+                <button
+                  className="quantity-button"
+                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  type="button"
+                >
+                  <Minus size={18} />
+                </button>
+                <span className="quantity-display">{quantity}</span>
+                <button
+                  className="quantity-button"
+                  onClick={() => setQuantity(Math.min(selectedProduct.stock, quantity + 1))}
+                  type="button"
+                >
+                  <Plus size={18} />
+                </button>
+              </div>
+              <p className="quantity-hint">Disponible: {selectedProduct.stock} unidades</p>
+            </div>
+
+            <div className="modal-total">
+              <span className="modal-total-label">Total</span>
+              <span className="modal-total-value">{formatCurrency(selectedProduct.price * quantity)} COP</span>
+            </div>
+
             <button
-              className="submit-button"
+              className="modal-submit-button"
               onClick={handleProceedToPayment}
             >
               Proceder al pago
+              <ArrowRight size={20} />
             </button>
           </div>
         </div>

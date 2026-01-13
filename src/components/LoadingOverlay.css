@@ -1,3 +1,7 @@
+/* ===========================
+   LoadingOverlay - Overlay de carga moderno
+   =========================== */
+
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -5,34 +9,29 @@
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 2000;
+  z-index: var(--z-modal);
+  animation: fadeIn var(--transition-base) ease-in;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #1ED760;
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(178, 242, 187, 0.2);
+  border-top-color: var(--primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 .loading-text {
   color: white;
-  margin-top: 20px;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  margin-top: var(--spacing-xl);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
